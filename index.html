@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Modified Rhodes Score Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .info-box {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #e7f3ff;
+      border-left: 4px solid #2196F3;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Modified Rhodes Score Calculator</h1>
+
+    <label for="bsa">BSA (m²):</label>
+    <input type="number" id="bsa" step="any">
+
+    <label for="zscore">Aortic Annulus Z-score:</label>
+    <input type="number" id="zscore" step="any">
+
+    <label for="lvAxis">Long Axis LV (cm):</label>
+    <input type="number" id="lvAxis" step="any">
+
+    <label for="heartAxis">Long Axis Heart (cm):</label>
+    <input type="number" id="heartAxis" step="any">
+
+    <label for="efe">EFE Grade:</label>
+    <select id="efe">
+      <option value="0">0 - None</option>
+      <option value="1">1 - Papillary muscles only</option>
+      <option value="2">2 - Papillary + some endocardium</option>
+      <option value="3">3 - Extensive endocardium</option>
+    </select>
+
+    <button onclick="calculateModifiedRhodes()">Calculate</button>
+
+    <div class="result" id="result"></div>
+
+    <div class="info-box">
+      <strong>EFE Grade Explanation:</strong><br>
+      0 = None<br>
+      1 = Involvement of papillary muscles only<br>
+      2 = Papillary muscle with some endocardial involvement<br>
+      3 = Extensive endocardial surface involvement
+    </div>
+  </div>
+
+  <script>
+    function calculateModifiedRhodes() {
+      const bsa = parseFloat(document.getElementById('bsa').value);
+      const zscore = parseFloat(document.getElementById('zscore').value);
+      const lvAxis = parseFloat(document.getElementById('lvAxis').value);
+      const heartAxis = parseFloat(document.getElementById('heartAxis').value);
+      const efe = parseInt(document.getElementById('efe').value);
+
+      if ([bsa, zscore, lvAxis, heartAxis].some(isNaN)) {
+        document.getElementById('result').innerText = 'Please fill in all fields.';
+        return;
+      }
+
+      const longAxisRatio = lvAxis / heartAxis;
+      const score = (10.98 * bsa) + (0.56 * zscore) + (5.89 * longAxisRatio) - (0.79 * efe) - 6.78;
+
+      document.getElementById('result').innerText = `Modified Rhodes Score: ${score.toFixed(2)}`;
+    }
+  </script>
+</body>
+</html>
